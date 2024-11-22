@@ -5,18 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seven and a half</title>
     <link rel="stylesheet" href="./style.css">
+    <script src="functions.js"></script>
   </head>
   <body>
     <main>
-        <button>
+        <a id="playButton" href="./game.html">
             Play <!-- Aquí hi va el button per poder entrar a jugar -->
+        </a>
+        <button id="rulesButton">
+            Rules <!-- Aquí hi va un button per poder veure les instruccions del joc, pensar en com afegir-hi ajudes visuals per al jugador -->
         </button>
-        <button>
-            Rules <!-- Aquí hi va un button per poder veure les instruccions -->
-        </button>
-        <button>
+        <button id="setUpButton">
             Set up <!-- Aquí hi va un button per poder modificar les dades inicials del joc, és una landing page simple -->
         </button>
-    </main>
+        <input id="userNameInput" type="text" placeholder="Introduce your user name"></input>
+        <br>
+        <div id="dealerCards"></div>
+        <br>
+        <div id="playerCards"></div> 
+      </main>
   </body>
 </html>
