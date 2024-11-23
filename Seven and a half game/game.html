@@ -62,5 +62,19 @@
         <button id="restart-game">Restart Game</button>
       </section>
     </main>
+    <div id="victory-modal" class="modal hidden">
+      <div class="modal-content victory-content">
+        <h2>CONGRATS:</h2>
+        <p>You have won: <span id="winning-amount">300$</span></p>
+        <button id="victory-continue" class="modal-button">Continue</button>
+      </div>
+    </div>
+    <div id="lose-modal" class="modal hidden">
+      <div class="modal-content lose-content">
+        <h2>YOU LOSE</h2>
+        <button id="lose-continue" class="modal-button">Try Again</button>
+      </div>
+    </div>
   </body>
+  <script src="./js/game.js" defer></script>
 </html>
