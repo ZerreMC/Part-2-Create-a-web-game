@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven and a half</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <main>
+        <a id="playButton" href="./game.html">
+            Play <!-- Aquí hi va el button per poder entrar a jugar -->
+        </a>
+        <button id="rulesButton">
+            Rules <!-- Aquí hi va un button per poder veure les instruccions del joc, pensar en com afegir-hi ajudes visuals per al jugador -->
+        </button>
+        <button id="setUpButton">
+            Set up <!-- Aquí hi va un button per poder modificar les dades inicials del joc, és una landing page simple -->
+        </button>
+        <input id="userNameInput" type="text" placeholder="Introduce your user name"></input>
+        <input id="currency" type="number" value="1000"></input>
+        <input id="bet" type="number" value="100" min="10"></input>
+        <br>
+        <div id="dealerCards"></div>
+        <br>
+        <div id="playerCards"></div> 
+
+        <div id="playerActions"> <!-- Posar a hidden aquests buttons, el javascript ja els farà visibles -->
+          <button id="standButton">Stand</button>
+          <button id="drawFaceUpButton">Draw Face-Up Card</button>
+          <button id="drawFaceDownButton">Draw Face-Down Card</button>
+        </div>
+
+      </main>
+  </body>
+</html>

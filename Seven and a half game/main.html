@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seven and a half</title>
+    <link rel="icon" href="../Images/icon.svg" type="image/svg+xml" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="./js/main.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">SEVEN AND A HALF GAME</h1>
+      <h2 class="subtitle">PLAYER INFORMATION</h2>
+      <form class="player-form" id="playerForm">
+        <label for="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Enter your name"
+          required
+        />
+        <label for="money">Initial money:</label>
+        <input
+          type="number"
+          id="money"
+          name="money"
+          placeholder="Enter initial money"
+          min="1"
+          required
+        />
+        <button type="submit" class="start-button">Start</button>
+    </div>
+  </body>
+</html>
