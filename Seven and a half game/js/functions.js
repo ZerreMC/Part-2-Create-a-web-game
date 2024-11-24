@@ -1,8 +1,8 @@
 // Deck actions
 
 function makeDeck() {
-  const suits = ['Cups', 'Coins', 'Swords', 'Clubs'];
-  const ranks = ['Ace', '2', '3', '4', '5', '6', '7', 'Jack', 'Queen', 'King'];
+  const suits = ['copas', 'oros', 'espadas', 'bastos'];
+  const ranks = ['1', '2', '3', '4', '5', '6', '7', '10', '11', '12'];
   const deck = [];
 
   for (let suit of suits) {
@@ -10,10 +10,8 @@ function makeDeck() {
       let value;
       
 
-      if (rank === 'Jack' || rank === 'Queen' || rank === 'King') {
+      if (rank === '10' || rank === '11' || rank === '12') {
         value = 0.5;
-      } else if (rank === 'Ace') {
-        value = 1;
       } else {
         value = parseInt(rank);
       }
@@ -51,11 +49,11 @@ function calculateScore(hand) {
   return score;
 }
 
-function addPlayer(name,bot) {
+function addPlayer(bot) {
   return {
-    name: name?name:"User",
+    name: "User",
     hand: [],
-    currency: parseInt(document.getElementById("currency").value),
+    currency: parseInt(localStorage.getItem("initialMoney")) || 1000,
     isStanding: false,
     hasLost: false,
     isBot: bot
@@ -73,33 +71,62 @@ function randy() {
 function setUpGame() {
   const players = [];
   players.push(addPlayer("Dealer",true))
-  players.push(addPlayer(document.getElementById("userNameInput").value.trim(),false));
+  players.push(addPlayer(false));
   return players;
   
 }
 
-function displayCards(players) {
+function showVictoryModal(winningAmount) {
+  const modal = document.getElementById("victory-modal");
+  const winningAmountSpan = document.getElementById("winning-amount");
+  winningAmountSpan.innerText = `${winningAmount}$`;
+  modal.classList.remove('hidden');  // Mostra el modal
+}
+
+function showLoseModal() {
+  const modal = document.getElementById("lose-modal");
+  modal.classList.remove('hidden');  // Mostra el modal
+}
+
+document.getElementById("victory-continue").addEventListener('click', () => {
+  const modal = document.getElementById("victory-modal");
+  modal.classList.add('hidden');  // Mostra el modal
+});
+
+document.getElementById("lose-continue").addEventListener('click', () => {
+  const modal = document.getElementById("lose-modal");
+  modal.classList.add('hidden');  // Mostra el modal
+});
+
+
+async function displayCards(players) {
   const dealerDiv = document.getElementById("dealerCards");
   const playerDiv = document.getElementById("playerCards");
 
   // Mostrar les cartes del dealer, amb la primera carta oculta
-  let dealerCardsHtml = "<p>Dealer's Hand:</p>";
-  dealerCardsHtml += `<div>Face down</div>`;  // Primer carta del dealer, oculta
+  let dealerCardsHtml = ``;
 
-  for (let i = 1; i < players[0].hand.length; i++) {
-    const card = players[0].hand[i];
-    dealerCardsHtml += `<div>${card.rank} of ${card.suit}</div>`;
+  for (let card of players[0].hand) {
+    dealerCardsHtml +=  `<img class="card" src="../Images/Cards/${card.suit.toLowerCase()}_${card.rank}.jpg" alt="${card.rank} of ${card.suit}" />`;
   }
 
   dealerDiv.innerHTML = dealerCardsHtml;
 
   // Mostrar les cartes del jugador
-  let playerCardsHtml = `<p>${players[1].name} score: ${calculateScore(players[1].hand)} currency: ${players[1].currency}</p>`;
+  let playerCardsHtml = ``;
   for (let card of players[1].hand) {
-    playerCardsHtml += `<div>${card.rank} of ${card.suit}</div>`;
+    playerCardsHtml +=  `<img class="card" src="../Images/Cards/${card.suit.toLowerCase()}_${card.rank}.jpg" alt="${card.rank} of ${card.suit}" />`;
   }
 
   playerDiv.innerHTML = playerCardsHtml;
+
+  const userScore = calculateScore(players[1].hand);
+  const dealerScore = calculateScore(players[0].hand);
+  const userCurrency = players[1].currency;
+  // Update the score spans dynamically
+  document.getElementById("your-score").textContent = userCurrency; 
+  document.getElementById("userActualScore").textContent = userScore.toFixed(1);  // Ensuring 1 decimal place
+  document.getElementById("dealerActualScore").textContent = dealerScore.toFixed(1);  // Ensuring 1 decimal place
 }
 
 
@@ -126,26 +153,25 @@ async function playTurn(players, deck) {
   }
 
   // Setup event listeners for the action buttons
-  const standButton = document.getElementById("standButton");
-  const drawFaceUpButton = document.getElementById("drawFaceUpButton");
-  const drawFaceDownButton = document.getElementById("drawFaceDownButton");
-
+  const standButton = document.getElementById("stand");
+  const draw = document.getElementById("draw-card");
+  const restartGame = document.getElementById("restart-game");
   // Disabling buttons initially until it's the player's turn
-  standButton.hidden = true;
-  drawFaceUpButton.hidden = true;
-  drawFaceDownButton.hidden = true;
+  standButton.disabled = true;
+  draw.disabled = true;
+  restartGame.disabled = true;
 
   // Helper function to enable buttons
   function enableButtons() {
-    standButton.hidden = false;
-    drawFaceUpButton.hidden = false;
-    drawFaceDownButton.hidden = false;
+    standButton.disabled = false;
+    draw.disabled = false;
+    restartGame.disabled = false;
   }
 
   // While any player is still playing (not lost or standing)
   while (end !== players.length) {
     for (let i = 1; i < players.length; i++) {  // Loop through all players, skip dealer (index 0)
-      displayCards(players);  // Display current state of the game
+      await displayCards(players);  // Display current state of the game
       await delay(500); // Wait .5 second to show the cards
 
       // Only allow player actions if they haven't lost and aren't standing
@@ -161,24 +187,24 @@ async function playTurn(players, deck) {
             resolve();
           };
 
-          drawFaceUpButton.onclick = () => {
+          draw.onclick = () => {
             players[i].hand.push(drawCard(deck));  // Draw face-up card
             resolve();
           };
 
-          drawFaceDownButton.onclick = () => {
-            players[i].hand.unshift(drawCard(deck));  // Draw face-down card
+          restartGame.onclick = () => {
+            runGame();
             resolve();
           };
         });
 
         // Disable buttons after action
-        standButton.hidden = true;
-        drawFaceUpButton.hidden = true;
-        drawFaceDownButton.hidden = true;
+        standButton.disabled = true;
+        draw.disabled = true;
+        restartGame.disabled = true;
 
         // Display updated cards after action
-        displayCards(players);
+        await displayCards(players);
         await delay(500); // Wait another .5 before continuing
       }
 
@@ -202,13 +228,20 @@ function getStatistics(players) {
 }
 
 
-function playDealer(players,max,deck) {
-  players[0].hand.push(drawCard(deck));
+async function playDealer(players,max,deck) {
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   while(calculateScore(players[0].hand)< max) {
     players[0].hand.push(drawCard(deck));
+    await displayCards(players);
+    await delay(500);
   }
   if (calculateScore(players[0].hand) > 7.5) players[0].hasLost = true;
   else players[0].isStanding = true;
+  await delay(500);
 }
 
 function payPlayers(players,max,betAmount) {
@@ -245,35 +278,37 @@ async function betMoney(players) {
       break;  // Sortim del bucle quan l'aposta és vàlida
     } else {
       // Opcional: pots mostrar un missatge d'error si l'aposta no és vàlida
-      alert("L'aposta ha de ser un valor positiu i no pot superar la teva moneda actual.");
       await new Promise(resolve => setTimeout(resolve, 500));  // Esperem una mica per evitar loops incontrolats
     }
   }
   return betAmount;
 }
 
-
 async function runGame() {
+  console.assert("Starting the game");
   const players = setUpGame();
-  const betAmount = await betMoney(players);
   while(players[1].currency!==0) {
+    const betAmount = await betMoney(players);
     initialize(players);
     const deck = shuffleDeck(makeDeck());
     playersBet(betAmount,players);
-    displayCards(players);
+    await displayCards(players);
     giveOneCardToAll(players,deck);
-    displayCards(players);
+    await displayCards(players);
     await playTurn(players,deck);
     max = getStatistics(players);
     if (max !== 0) {
-      playDealer(players,max,deck);
+      await playDealer(players,max,deck);
     }
     if (players[0].hasLost) {
       payPlayers(players,max,betAmount);
+      showVictoryModal(betAmount);
     } else {
       players[0].currency+=betAmount;
+      showLoseModal();
     }
-    displayCards(players);
+    await displayCards(players);
+    localStorage.setItem("initialMoney", players[1].currency);
   }
   
 }
@@ -281,7 +316,7 @@ async function runGame() {
 
 
 document.addEventListener('DOMContentLoaded',function() {
-  document.getElementById("setUpButton").addEventListener('click',function() {
     runGame();
-  });
 });
+
+
