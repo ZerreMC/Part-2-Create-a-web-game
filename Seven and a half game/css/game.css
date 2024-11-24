@@ -17,6 +17,12 @@ main {
     max-width: 800px;
 }
 
+button:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 .home-link {
     display: inline-block;
     position: fixed;
@@ -79,7 +85,6 @@ main {
 .players {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     height: 100%;
 }
 
@@ -130,33 +135,106 @@ button:active {
     display: none;
 }
 
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+    display: none;
+}
+
 .modal-button {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.victory-content {
+    background-color: #FFD700; /* Bright yellow background */
+    border-radius: 15px;
+    padding: 50px;
+    text-align: center;
+    color: #000;
+    width: 60%;
+    max-width: 400px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.lose-content {
+    background-color: #D32F2F; /* Red background */
+    border-radius: 15px;
+    padding: 50px;
+    text-align: center;
+    color: #FFF;
+    width: 60%;
+    max-width: 400px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.modal-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.modal-button:active {
+  transform: scale(0.95);
+}
+
+#victory-continue {
+  background-color: #6A8E1D;
+  color: #FFFFFF;
+}
+
+#lose-continue {
+  background-color: #FA2639;
+  color: #FFFFFF;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Tres columnes */
+    grid-gap: 10px; /* Espai entre cartes */
+    justify-items: center; /* Centrar les cartes horitzontalment */
+    align-items: center; /* Centrar les cartes verticalment */
+    padding: 10px;
+}
+
+.card {
+    width: 60px; /* Amplada de cada carta */
+    height: 90px; /* Alçada de cada carta */
     border: 2px solid black;
     border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .modal-button:hover {
-    transform: scale(1.05);
+    overflow: hidden;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .modal-button:active {
-    transform: scale(0.95);
-  }
-  
-  #victory-continue {
-    background-color: #6A8E1D;
-    color: #FFFFFF;
-  }
-  
-  #lose-continue {
-    background-color: #FA2639;
-    color: #FFFFFF;
-  }
-  
+}
+
+.card img {
+    width: 100%; /* Ajusta la imatge a l'amplada de la carta */
+    height: auto; /* Manté les proporcions de la imatge */
+    object-fit: contain;
+}
+
+/* Ajustos específics per a la secció de cartes del jugador i del dealer */
+.player .cards, .dealer .cards {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
