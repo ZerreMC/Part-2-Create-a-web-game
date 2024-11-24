@@ -10,7 +10,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./css/game.css" />
-    <script src="functions.js"></script>
+    <script src="js/functions.js" defer></script>
   </head>
   <body>
     <main>
@@ -28,8 +28,10 @@
       </a>
       <section class="header">
         <div>
-          <h3>Your Score: <span id="your-score">0</span></h3>
+          <h3>Your Score: <span id="your-score"></span></h3>
         </div>
+        <h3>Bet amount: <input id="bet" type="number" min="10" value="10"></h3>
+        
         <div>
           <h3>Dealer Score: <span id="dealer-score">x</span></h3>
         </div>
@@ -40,15 +42,15 @@
             <div class="players">
               <!-- Player Area -->
               <div class="player">
-                <h3>YOU:</h3>
-                <div class="cards">
+                <h3>YOU: <span id="userActualScore"></span></h3>
+                <div id="playerCards" class="cards">
                   <!-- Cards -->
                 </div>
               </div>
               <!-- Dealer Area -->
               <div class="dealer">
-                <h3>DEALER:</h3>
-                <div class="cards">
+                <h3>DEALER: <span id="dealerActualScore"></span></h3>
+                <div id="dealerCards" class="cards">
                   <!-- Cards -->
                 </div>
               </div>
@@ -65,7 +67,7 @@
     <div id="victory-modal" class="modal hidden">
       <div class="modal-content victory-content">
         <h2>CONGRATS:</h2>
-        <p>You have won: <span id="winning-amount">300$</span></p>
+        <p>You have won: <span id="winning-amount"></span></p>
         <button id="victory-continue" class="modal-button">Continue</button>
       </div>
     </div>
